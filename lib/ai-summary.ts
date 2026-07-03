@@ -1,5 +1,5 @@
-import { generateText, streamText } from "ai";
-import { Product } from "./types";
+import { generateObject, generateText, streamText } from "ai";
+import { Product, ReviewInsights, ReviewInsightsSchema } from "./types";
 
 export async function summarizeReviews(product: Product): Promise<string> {
   const averageRating =
@@ -101,4 +101,41 @@ ${product.reviews
   });
 
   return result;
+}
+
+export async function getReviewInsights(
+  product: Product,
+): Promise<ReviewInsights> {
+  const averageRating =
+    product.reviews.reduce((acc, review) => acc + review.stars, 0) /
+    product.reviews.length;
+
+  const prompt = `Analyze the following customer reviews for the ${product.name} product (average rating: ${averageRating}/5).
+ 
+Extract:
+1. Pros: 3-5 positive aspects customers appreciate
+2. Cons: 3-5 negative aspects or concerns mentioned
+3. Themes: 3-5 key themes that emerge across reviews
+ 
+Be specific and concise. Each item should be 3-7 words.
+ 
+Reviews:
+${product.reviews
+  .map(
+    (review, i) => `Review ${i + 1} (${review.stars} stars):\n${review.review}`,
+  )
+  .join("\n\n")}`;
+
+  try {
+    const { object } = await generateObject({
+      model: "minimax/minimax-m3",
+      schema: ReviewInsightsSchema,
+      prompt,
+    });
+
+    return object;
+  } catch (error) {
+    console.error("Failed to extract insights:", error);
+    throw new Error("Unable to extract review insights. Please try again.");
+  }
 }
