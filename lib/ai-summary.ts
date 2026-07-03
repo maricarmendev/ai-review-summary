@@ -1,7 +1,12 @@
 import { generateObject, generateText, streamText } from "ai";
 import { Product, ReviewInsights, ReviewInsightsSchema } from "./types";
+import { cacheLife, cacheTag } from "next/cache";
 
 export async function summarizeReviews(product: Product): Promise<string> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(`product-summary-${product.slug}`);
+
   const averageRating =
     product.reviews.reduce((acc, review) => acc + review.stars, 0) /
     product.reviews.length;
@@ -59,6 +64,9 @@ ${product.reviews
 // Add this new streaming function
 
 export async function streamReviewSummary(product: Product) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(`product-summary-${product.slug}`);
   const averageRating =
     product.reviews.reduce((acc, review) => acc + review.stars, 0) /
     product.reviews.length;
@@ -106,6 +114,9 @@ ${product.reviews
 export async function getReviewInsights(
   product: Product,
 ): Promise<ReviewInsights> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(`product-summary-${product.slug}`);
   const averageRating =
     product.reviews.reduce((acc, review) => acc + review.stars, 0) /
     product.reviews.length;
