@@ -38,7 +38,7 @@ ${product.reviews
 
   try {
     const { text } = await generateText({
-      model: "anthropic/claude-sonnet-4.5",
+      model: "minimax/minimax-m3",
       prompt,
       maxOutputTokens: 1000,
       temperature: 0.75,
