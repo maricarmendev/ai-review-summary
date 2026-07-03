@@ -41,7 +41,7 @@ ${product.reviews
       model: "minimax/minimax-m3",
       prompt,
       maxOutputTokens: 1000,
-      temperature: 0.75,
+      // temperature: 0.75,
     });
 
     // Clean up the response
