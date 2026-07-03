@@ -4,6 +4,7 @@ import { getProduct, getProducts } from "@/lib/sample-data";
 import { Reviews } from "@/components/reviews";
 import { StreamingSummary } from "@/components/streaming-summary";
 import { ReviewInsights } from "@/components/review-insights";
+import { Suspense } from "react";
 
 export default async function ProductPage({
   params,
@@ -33,7 +34,13 @@ export default async function ProductPage({
 
         <ReviewInsights product={product} />
 
-        <Reviews product={product} />
+        <Suspense
+          fallback={
+            <p className="text-sm text-muted-foreground">Loading reviews...</p>
+          }
+        >
+          <Reviews product={product} />
+        </Suspense>
       </div>
     </main>
   );

@@ -43,7 +43,7 @@ ${product.reviews
 
   try {
     const { text } = await generateText({
-      model: "minimax/minimax-m3",
+      model: "mistral/ministral-3b",
       prompt,
       maxOutputTokens: 1000,
       // temperature: 0.75,
@@ -64,9 +64,6 @@ ${product.reviews
 // Add this new streaming function
 
 export async function streamReviewSummary(product: Product) {
-  "use cache";
-  cacheLife("hours");
-  cacheTag(`product-summary-${product.slug}`);
   const averageRating =
     product.reviews.reduce((acc, review) => acc + review.stars, 0) /
     product.reviews.length;
@@ -102,7 +99,7 @@ ${product.reviews
   .join("\n\n")}`;
 
   const result = streamText({
-    model: "minimax/minimax-m3",
+    model: "mistral/ministral-3b",
     prompt,
     // maxTokens: 1000,
     // temperature: 0.75,
@@ -116,7 +113,8 @@ export async function getReviewInsights(
 ): Promise<ReviewInsights> {
   "use cache";
   cacheLife("hours");
-  cacheTag(`product-summary-${product.slug}`);
+  cacheTag(`product-insights-${product.slug}`);
+
   const averageRating =
     product.reviews.reduce((acc, review) => acc + review.stars, 0) /
     product.reviews.length;
@@ -139,7 +137,7 @@ ${product.reviews
 
   try {
     const { object } = await generateObject({
-      model: "minimax/minimax-m3",
+      model: "mistral/ministral-3b",
       schema: ReviewInsightsSchema,
       prompt,
     });
